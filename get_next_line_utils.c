@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"get_next_line.h"
+#include "get_next_line.h"
 
 size_t	ft_strlen( const char *str)
 {
@@ -35,11 +35,13 @@ char	*ft_strjoin(char  *s1, char  *s2)
 
 	j = 0;
 	i = 0;
-	if(!s1)
+	if(!s1 && s2)
 	{
 		s1 = malloc(1);
 		s1[0] = '\0';
 	}
+	if (!s1 || !s2)
+		return (NULL);
 	size_total = ft_strlen(s1) + ft_strlen(s2);
 	res = malloc(size_total + 1);
 	if (!res)
@@ -52,7 +54,7 @@ char	*ft_strjoin(char  *s1, char  *s2)
 	while (s2[j] != 0)
 		res[i++] = s2[j++];
 	res[i] = '\0';
-	free(s1);
+	free(s1), s1 = NULL;
 	return (res);
 }
 
@@ -77,10 +79,12 @@ char *ft_premierstr(char *s)
 	int		i;
 	char	*res;
 	i = 0;
-	if (!s[i])
+	if (!s)
 		return (NULL);
 	while (s[i] && s[i] != '\n')
 		i++;
+	if (!s[i])
+		return (NULL);
 	res = malloc((i + 2));
 	if (!res)
 		return (NULL);
@@ -96,6 +100,7 @@ char *ft_premierstr(char *s)
 		i++;
 	}
 	res[i] = '\0';
+	// free(s), s = NULL;
 	return (res);
 }
 char	*ft_desiemstr(char *s)
@@ -112,7 +117,6 @@ char	*ft_desiemstr(char *s)
 		i++;
 	if(s[i] == '\0')
 	{
-		free(s);
 		return(NULL);
 	}
 	r = malloc((ft_strlen(s) - i) + 1);
@@ -122,6 +126,5 @@ char	*ft_desiemstr(char *s)
 	while(s[i])
 		r[j++] = s[i++];
 	r[j] = '\0';
-     free(s);
 	return(r);
 }

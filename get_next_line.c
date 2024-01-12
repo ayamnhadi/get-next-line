@@ -20,10 +20,10 @@ char	*ft_read(int fd, char *str)
 	if (!buff)
 		return (NULL);
 	r_byt = 1;
-	while (!ft_strchr(str, '\n') && r_byt != 0)
+	while (!ft_strchr(str, '\n') && r_byt > 0)
 	{
 		r_byt = read(fd, buff, BUFFER_SIZE);
-		if (r_byt == -1)
+		if (r_byt <= 0)
 		{
 			free(buff);
 			return (NULL);
@@ -31,21 +31,30 @@ char	*ft_read(int fd, char *str)
 		buff[r_byt] = '\0';
 		str = ft_strjoin(str, buff);
 	}
-    free(buff);
+    free(buff), buff = NULL;
 	return (str);
 }
 char *get_next_line(int fd) {
     static char *str;
+	char *temp;
     char *line;
 	// char *tem = NULL;
     if (fd < 0 || BUFFER_SIZE <= 0) 
         return (NULL);
+	if (str && ft_strchr(str, '\n'))
+	{
+		line = ft_premierstr(str);
+    	temp = ft_desiemstr(str);
+		free(str), str = NULL;
+		str = temp;
+		return (line);
+	}
     str = ft_read(fd, str);
     if (!str)
-    {
         return NULL;
-    }
     line = ft_premierstr(str);
-    str = ft_desiemstr(str);
+    temp = ft_desiemstr(str);
+	free (str), str = NULL;
+	str = temp;
     return (line);
 }
